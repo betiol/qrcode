@@ -22,7 +22,6 @@ const QRCodeScanner = () => {
   };
 
   const scannerConfig = {
-    // facingMode: camera ? "environment" : "user", // Usar a câmera traseira
     delay: 300,
     legacyMode: false
   };
@@ -32,10 +31,9 @@ const QRCodeScanner = () => {
       <QrReader
         {...scannerConfig}
         onError={handleError}
-        onResult={handleScan}
+        onScan={handleScan}
         constraints={{
-          aspectRatio: "1",
-          facingMode: { exact: camera ? "environment" : "user" }
+          facingMode: camera ? "environment" : "user" // Use a câmera traseira, se disponível
         }}
         style={qrReaderStyle}
       />
