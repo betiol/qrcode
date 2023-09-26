@@ -4,6 +4,8 @@ import invertColor from "invert-color";
 
 const QRCodeScanner = () => {
   const [result, setResult] = useState(null);
+  const [camera, setCamera] = useState("");
+  const [color, setColor] = useState(false);
 
   const handleScan = (data) => {
     if (data) {
@@ -20,16 +22,9 @@ const QRCodeScanner = () => {
   };
 
   const scannerConfig = {
-    facingMode: "environment", // Use a câmera traseira, se disponível
+    facingMode: camera ? "environment" : "user", // Usar a câmera traseira
     delay: 300,
-    legacyMode: false, // Use o modo moderno para melhor desempenho
-    constraints: {
-      video: {
-        facingMode: "environment",
-        brightness: { ideal: 1, min: 0.5, max: 2 },
-        contrast: { ideal: 1, min: 0.5, max: 2 }
-      }
-    }
+    legacyMode: false
   };
 
   return (
@@ -56,9 +51,9 @@ const QRCodeScanner = () => {
           <div
             style={{
               marginTop: "20px",
-              backgroundColor: invertColor("white", true),
+              backgroundColor: invertColor(color ? "#ffffff" : "#000000", true),
               padding: "10px",
-              color: invertColor("black", true),
+              color: invertColor(color ? "#000000" : "#ffffff", true),
               fontWeight: "bold"
             }}
           >
@@ -66,6 +61,28 @@ const QRCodeScanner = () => {
           </div>
         </div>
       )}
+      <button
+        style={{
+          padding: 10,
+          margin: 10,
+          borderRadius: 4,
+          background: "tomato",
+          color: "white",
+          border: "none"
+        }}
+        onClick={() => setCamera(!camera)}
+      >{`Camera running ${camera}`}</button>
+      <button
+        style={{
+          padding: 10,
+          margin: 10,
+          borderRadius: 4,
+          background: "tomato",
+          color: "white",
+          border: "none"
+        }}
+        onClick={() => setColor(!color)}
+      >{`Set color to ${color ? "white" : "black"}`}</button>
     </div>
   );
 };

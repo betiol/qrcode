@@ -12,10 +12,10 @@ code {
     monospace;
 } */
 #video {
-  width: 30% !important;
-  height: 30% !important;
+  width: 60% !important;
+  height: 60% !important;
 }
 
 body {
-  background-color: black;
+  /* background-color: black; */
 }
