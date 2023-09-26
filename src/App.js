@@ -7,7 +7,7 @@ const QRCodeScanner = () => {
 
   const handleScan = (data) => {
     if (data) {
-      alert(data);
+      setResult(data);
     }
   };
 
@@ -23,7 +23,6 @@ const QRCodeScanner = () => {
     facingMode: "environment", // Use a câmera traseira, se disponível
     delay: 300,
     legacyMode: false, // Use o modo moderno para melhor desempenho
-    // Configurações de contraste e brilho para leitura de QR codes com fundo preto
     constraints: {
       video: {
         facingMode: "environment",
@@ -52,7 +51,7 @@ const QRCodeScanner = () => {
               fontWeight: "bold"
             }}
           >
-            {result}
+            {JSON.stringify(result)}
           </div>
           <div
             style={{
@@ -63,7 +62,7 @@ const QRCodeScanner = () => {
               fontWeight: "bold"
             }}
           >
-            {result}
+            {JSON.stringify(result)}
           </div>
         </div>
       )}
