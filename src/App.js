@@ -5,7 +5,7 @@ import invertColor from "invert-color";
 const QRCodeScanner = () => {
   const [result, setResult] = useState(null);
   const [camera, setCamera] = useState("");
-  const [color, setColor] = useState(false);
+  const [color, setColor] = useState(true);
 
   const handleScan = (data) => {
     if (data) {
