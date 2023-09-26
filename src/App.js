@@ -35,7 +35,7 @@ const QRCodeScanner = () => {
         onResult={handleScan}
         constraints={{
           aspectRatio: "1",
-          facingMode: camera ? "environment" : "user"
+          facingMode: { exact: camera ? "environment" : "user" }
         }}
         style={qrReaderStyle}
       />
