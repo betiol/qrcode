@@ -59,7 +59,7 @@ const QRCodeScanner = () => {
   return (
     <div>
       <video ref={videoRef} onPlay={handleScan} autoPlay playsInline />
-      <canvas ref={canvasRef} />
+      {/* <canvas ref={canvasRef} /> */}
       {result && (
         <div>
           <p>QR Code data:</p>
