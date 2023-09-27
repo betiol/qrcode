@@ -1,90 +1,71 @@
-import React, { useState } from "react";
-import { QrReader } from "react-qr-reader";
-import invertColor from "invert-color";
+import React, { useState, useEffect, useRef } from "react";
+import decodeQRCode from "jsqr";
 
 const QRCodeScanner = () => {
   const [result, setResult] = useState(null);
-  const [camera, setCamera] = useState(true);
-  const [color, setColor] = useState(true);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const scanInterval = 1000;
 
-  const handleScan = (data) => {
-    if (data) {
-      setResult(data);
+  useEffect(() => {
+    const videoConfig = {
+      video: { facingMode: "environment" }
+    };
+
+    navigator.mediaDevices
+      .getUserMedia(videoConfig)
+      .then((stream) => {
+        videoRef.current.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const scanTimer = setInterval(() => {
+      handleScan();
+    }, scanInterval);
+
+    return () => {
+      clearInterval(scanTimer);
+    };
+  }, []);
+
+  const handleScan = () => {
+    if (videoRef.current && videoRef.current.videoWidth > 0) {
+      canvasRef.current.width = videoRef.current.videoWidth;
+      canvasRef.current.height = videoRef.current.videoHeight;
+      const ctx = canvasRef.current.getContext("2d");
+      ctx.drawImage(videoRef.current, 0, 0);
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
+      const code = decodeQRCode(
+        imageData.data,
+        imageData.width,
+        imageData.height
+      );
+
+      if (code) {
+        setResult(code.data);
+      }
     }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
-  const qrReaderStyle = {
-    width: "100%"
-  };
-
-  const scannerConfig = {
-    delay: 300,
-    legacyMode: false
   };
 
   return (
     <div>
-      <QrReader
-        {...scannerConfig}
-        onError={handleError}
-        onScan={handleScan}
-        constraints={{
-          facingMode: camera ? "environment" : "user" // Use a câmera traseira, se disponível
-        }}
-        style={qrReaderStyle}
-      />
+      <video ref={videoRef} onPlay={handleScan} autoPlay playsInline />
+      <canvas ref={canvasRef} />
       {result && (
-        <div style={{ marginTop: "20px" }}>
-          <p>Conteúdo do QR code:</p>
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "10px",
-              color: "black",
-              fontWeight: "bold"
-            }}
-          >
-            {JSON.stringify(result)}
-          </div>
-          <div
-            style={{
-              marginTop: "20px",
-              backgroundColor: invertColor(color ? "#ffffff" : "#000000", true),
-              padding: "10px",
-              color: invertColor(color ? "#000000" : "#ffffff", true),
-              fontWeight: "bold"
-            }}
-          >
-            {JSON.stringify(result)}
-          </div>
+        <div>
+          <p>QR Code data:</p>
+          <p>{result}</p>
         </div>
       )}
-      <button
-        style={{
-          padding: 10,
-          margin: 10,
-          borderRadius: 4,
-          background: "tomato",
-          color: "white",
-          border: "none"
-        }}
-        onClick={() => setCamera(!camera)}
-      >{`Camera running ${camera}`}</button>
-      <button
-        style={{
-          padding: 10,
-          margin: 10,
-          borderRadius: 4,
-          background: "tomato",
-          color: "white",
-          border: "none"
-        }}
-        onClick={() => setColor(!color)}
-      >{`Set color to ${color ? "white" : "black"}`}</button>
     </div>
   );
 };
