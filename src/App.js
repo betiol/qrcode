@@ -34,8 +34,8 @@ const QRCodeScanner = () => {
 
   const handleScan = () => {
     if (videoRef.current && videoRef.current.videoWidth > 0) {
-      canvasRef.current.width = videoRef.current.videoWidth;
-      canvasRef.current.height = videoRef.current.videoHeight;
+      canvasRef.current.width = videoRef.current?.videoWidth;
+      canvasRef.current.height = videoRef.current?.videoHeight;
       const ctx = canvasRef.current.getContext("2d");
       ctx.drawImage(videoRef.current, 0, 0);
       const imageData = ctx.getImageData(
